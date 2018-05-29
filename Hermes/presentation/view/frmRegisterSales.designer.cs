@@ -72,9 +72,9 @@
             this.txtClient = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
+            this.btnShowDeb = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.lvwDebts = new System.Windows.Forms.ListView();
             this.label25 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnNew = new System.Windows.Forms.Button();
@@ -666,41 +666,42 @@
             this.label24.Text = "DATOS CLIENTE";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // button6
+            // btnShowDeb
             // 
-            this.button6.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Location = new System.Drawing.Point(665, 152);
-            this.button6.Margin = new System.Windows.Forms.Padding(2);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(23, 268);
-            this.button6.TabIndex = 37;
-            this.button6.Text = ">";
-            this.button6.UseVisualStyleBackColor = false;
+            this.btnShowDeb.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnShowDeb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnShowDeb.Location = new System.Drawing.Point(665, 152);
+            this.btnShowDeb.Margin = new System.Windows.Forms.Padding(2);
+            this.btnShowDeb.Name = "btnShowDeb";
+            this.btnShowDeb.Size = new System.Drawing.Size(23, 268);
+            this.btnShowDeb.TabIndex = 37;
+            this.btnShowDeb.Text = ">";
+            this.btnShowDeb.UseVisualStyleBackColor = false;
             // 
             // panel6
             // 
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel6.Controls.Add(this.listView2);
+            this.panel6.Controls.Add(this.lvwDebts);
             this.panel6.Controls.Add(this.label25);
             this.panel6.Location = new System.Drawing.Point(700, 11);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(356, 477);
+            this.panel6.Size = new System.Drawing.Size(308, 477);
             this.panel6.TabIndex = 38;
             // 
-            // listView2
+            // lvwDebts
             // 
-            this.listView2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(172)))), ((int)(((byte)(84)))));
-            this.listView2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listView2.FullRowSelect = true;
-            this.listView2.GridLines = true;
-            this.listView2.Location = new System.Drawing.Point(6, 95);
-            this.listView2.MultiSelect = false;
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(340, 377);
-            this.listView2.TabIndex = 31;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
+            this.lvwDebts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(172)))), ((int)(((byte)(84)))));
+            this.lvwDebts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lvwDebts.FullRowSelect = true;
+            this.lvwDebts.GridLines = true;
+            this.lvwDebts.Location = new System.Drawing.Point(6, 95);
+            this.lvwDebts.MultiSelect = false;
+            this.lvwDebts.Name = "lvwDebts";
+            this.lvwDebts.Size = new System.Drawing.Size(294, 377);
+            this.lvwDebts.TabIndex = 31;
+            this.lvwDebts.UseCompatibleStateImageBehavior = false;
+            this.lvwDebts.View = System.Windows.Forms.View.Details;         
+            this.lvwDebts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvwDebts_ItemSelectionChanged);
             // 
             // label25
             // 
@@ -710,9 +711,9 @@
             this.label25.Location = new System.Drawing.Point(6, 0);
             this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(340, 21);
+            this.label25.Size = new System.Drawing.Size(294, 21);
             this.label25.TabIndex = 17;
-            this.label25.Text = "REGISTRO VENTAS";
+            this.label25.Text = "VENTAS CON DEUDA";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnClose
@@ -790,10 +791,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1059, 497);
+            this.ClientSize = new System.Drawing.Size(1012, 497);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.panel6);
-            this.Controls.Add(this.button6);
+            this.Controls.Add(this.btnShowDeb);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnAddSale);
@@ -874,9 +875,9 @@
         private System.Windows.Forms.Button btnAddSale;
         private System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.Button btnNew;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button btnShowDeb;
         private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ListView lvwDebts;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.ComboBox cboProduct;

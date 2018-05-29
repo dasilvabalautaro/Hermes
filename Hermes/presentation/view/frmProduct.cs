@@ -229,7 +229,7 @@ namespace Hermes.presentation.view
 
         private void lvwProduct_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (e.ItemIndex > -1)
+            if (e.IsSelected)
             {
                 this.product = this.listProduct[e.ItemIndex];
                 txtProduct.Text = this.product.Description;

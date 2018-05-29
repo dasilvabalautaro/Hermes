@@ -45,7 +45,9 @@ namespace Hermes.presentation.view
         private delegate void ListProductDelegate(List<Product> list,
             ComboBox cbo);
         private ListProductDelegate delegateListProduct;
-
+        private delegate void ListDebtDelegate(DataTable list,
+            ListView lvw);
+        private ListDebtDelegate delegateListDebt;
 
         IDisposable subscriptionPlugData;
         IDisposable subscriptionPlugError;
@@ -55,6 +57,7 @@ namespace Hermes.presentation.view
         IDisposable subscriptionMax;
         IDisposable subscriptionRegisterPay;
         IDisposable subscriptionRegisterPayError;
+        IDisposable subscriptionRegisterPayListDebt;
         #endregion
         public frmRegisterSales()
         {
@@ -73,6 +76,7 @@ namespace Hermes.presentation.view
             this.delegateListProduct = new ListProductDelegate(addListProduct);
             this.delegateCatchMessagePay = new MessageStatusPayDelegate(addMessageStatusPay);
             this.delegateCatchMaxId = new GetMaxIdDelegate(getMaxIdSale);
+            this.delegateListDebt = new ListDebtDelegate(getListDebt);
             subscriptionReactive();
             initControls();
             getListProducts();
@@ -81,8 +85,10 @@ namespace Hermes.presentation.view
         private void initControls()
         {
             lvwPays.Columns.Add("Pago", 100, HorizontalAlignment.Center);
-            lvwPays.Columns.Add("Monto", 200, HorizontalAlignment.Center);
+            lvwPays.Columns.Add("Monto", 180, HorizontalAlignment.Center);
             lvwPays.Tag = 0;
+            lvwDebts.Columns.Add("Código", 100, HorizontalAlignment.Center);
+            lvwDebts.Columns.Add("Saldo", 180, HorizontalAlignment.Center);
             txtUser.Text = User.instance.FirstName +
                 " " + User.instance.LastName;
             txtDate.Text = controlManager.setDateLocale();
@@ -171,12 +177,35 @@ namespace Hermes.presentation.view
                 .subjectError.Subscribe(
                         s => launchMessageError(s),
                         () => Console.WriteLine("Error Operation."));
+            subscriptionRegisterPayListDebt = registerPayPresenter
+                .subjectDatatable.Subscribe(
+                        t => launchListDebt(t),
+                        () => Console.WriteLine("List Debt Operation."));
         }
+
+        private void launchListDebt(DataTable list)
+        {          
+            this.Invoke(this.delegateListDebt,
+               new Object[] { list, lvwDebts});
+        }   
 
         private void launchMaxId(int max)
         {           
             this.Invoke(this.delegateCatchMaxId,
                new Object[] { max, status});           
+        }
+
+        private void getListDebt(DataTable list, ListView lvw)
+        {
+            lvw.Items.Clear();
+            foreach (DataRow dr in list.Rows)
+            {
+                ListViewItem item = new ListViewItem(dr[0].ToString(),
+                    lvw.Items.Count);
+                item.SubItems.Add(dr[1].ToString());
+                lvw.Items.Add(item);
+            }
+               
         }
 
         private void getMaxIdSale(int id, StatusStrip ssMain)
@@ -258,6 +287,7 @@ namespace Hermes.presentation.view
         private void frmRegisterSales_Shown(object sender, EventArgs e)
         {
             openPort();
+            executeGetDebts();
         }
 
         private void cboProduct_SelectedIndexChanged(object sender, EventArgs e)
@@ -468,5 +498,23 @@ namespace Hermes.presentation.view
                 lvwPays.Refresh();
             }
         }
+
+        private void executeGetDebts()
+        {
+            registerPayPresenter.setSQL(pay.SqlList);
+            Task t = Task.Factory.StartNew(new
+                Action(registerPayPresenter.getListDebt));
+        }
+
+        private void lvwDebts_ItemSelectionChanged(object sender, 
+            ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                int id = Convert.ToInt16(e.Item.Text);
+                Console.Write(id);
+            }
+        }
+    
     }
 }

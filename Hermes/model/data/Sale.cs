@@ -50,6 +50,7 @@ namespace Hermes.model.data
         private string _sqlDel = string.Empty;
         private string _sqlUpdate = string.Empty;
         private string _sqlMax = string.Empty;
+        private string _sqlGet = string.Empty;
 
         public int Id
         {
