@@ -26,12 +26,12 @@ namespace Hermes.presentation.presenter
             crudUseCase.OnOperationDatabase += new CRUDUseCase
                 .ResultOperationDelegate(sendResult);
             crudUseCase.OnDatatableDatabase += new CRUDUseCase
-                .ResultDatatableDelegate(setDebts);
+                .ResultDatatableDelegate(setDataTable);
         }
 
-        private void setDebts(DataTable dataDebts)
+        private void setDataTable(DataTable list)
         {
-            subjectDatatable.OnNext(dataDebts);
+            subjectDatatable.OnNext(list);
         }
       
         private void sendResult(bool result)
@@ -52,6 +52,13 @@ namespace Hermes.presentation.presenter
                 subjectError.OnNext(ie.Message);
 
             }
+        }
+
+        public void paramsForGetPaysOfId(int id)
+        {
+            Dictionary<string, object> mapParams = new Dictionary<string, object>();
+            mapParams.Add(Pay.PARAM_ID_SALE, id);
+            setParams(mapParams);
         }
 
         public void paramsForAddPay(Pay pay)
@@ -78,7 +85,12 @@ namespace Hermes.presentation.presenter
             crudUseCase.Sql = sql;
         }
 
-        public void getListDebt()
+        public void setNameTable(string name)
+        {
+            crudUseCase.NameTable = name;
+        }
+    
+        public void getDataTable()
         {
             try
             {

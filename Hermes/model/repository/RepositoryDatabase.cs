@@ -17,7 +17,7 @@ namespace Hermes.model.data.repository
         abstract public bool connect();
         abstract public bool create();
         abstract public bool isCnn();
-        abstract public DataTable getDataTable();      
+        abstract public DataTable getDataTable(string nameTable = "table");      
         abstract public void closeConnection();
         abstract public bool getValuesConfiguration();
         abstract public bool executeNonSQL(bool isProcedure = false);

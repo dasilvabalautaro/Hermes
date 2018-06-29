@@ -24,6 +24,7 @@ namespace Hermes.presentation.view
         private RegisterProductPresenter registerProductPresenter = new RegisterProductPresenter();
         private RegisterSalePresenter registerSalePresenter = new RegisterSalePresenter();
         private RegisterPayPresenter registerPayPresenter = new RegisterPayPresenter();
+        private PrintPresenter printPresenter = new PrintPresenter();
         private Product product = new Product();
         private Sale sale = new Sale();
         private Pay pay = new Pay();
@@ -48,6 +49,8 @@ namespace Hermes.presentation.view
         private delegate void ListDebtDelegate(DataTable list,
             ListView lvw);
         private ListDebtDelegate delegateListDebt;
+        private delegate void GetSaletDelegate(Sale sale);
+        private GetSaletDelegate delegateGetSale;
 
         IDisposable subscriptionPlugData;
         IDisposable subscriptionPlugError;
@@ -58,6 +61,11 @@ namespace Hermes.presentation.view
         IDisposable subscriptionRegisterPay;
         IDisposable subscriptionRegisterPayError;
         IDisposable subscriptionRegisterPayListDebt;
+        IDisposable subscriptionGetSale;
+        #endregion
+
+        #region constants
+        private const string TABLE_PAYS = "pays";
         #endregion
         public frmRegisterSales()
         {
@@ -69,6 +77,9 @@ namespace Hermes.presentation.view
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.PerformAutoScale();
             this.Top = 0;
+            this.Width = 712;
+            this.Height = 535;
+            
             this.Left = (int)((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2);
             status = controlManager.getStatusStripMain(mdiMain.NAME);
             this.delegatePortData = new PortDataDelegate(addPortData);
@@ -77,6 +88,7 @@ namespace Hermes.presentation.view
             this.delegateCatchMessagePay = new MessageStatusPayDelegate(addMessageStatusPay);
             this.delegateCatchMaxId = new GetMaxIdDelegate(getMaxIdSale);
             this.delegateListDebt = new ListDebtDelegate(getListDebt);
+            this.delegateGetSale = new GetSaletDelegate(getSale);
             subscriptionReactive();
             initControls();
             getListProducts();
@@ -87,16 +99,32 @@ namespace Hermes.presentation.view
             lvwPays.Columns.Add("Pago", 100, HorizontalAlignment.Center);
             lvwPays.Columns.Add("Monto", 180, HorizontalAlignment.Center);
             lvwPays.Tag = 0;
-            lvwDebts.Columns.Add("Código", 100, HorizontalAlignment.Center);
-            lvwDebts.Columns.Add("Saldo", 180, HorizontalAlignment.Center);
+            lvwDebts.Columns.Add("Código", 80, HorizontalAlignment.Center);
+            lvwDebts.Columns.Add("Saldo", 120, HorizontalAlignment.Center);
             txtUser.Text = User.instance.FirstName +
                 " " + User.instance.LastName;
             txtDate.Text = controlManager.setDateLocale();
             txtQuantity.Text = "1";
+            sale.Quantity = 1;
             sale.UserId = User.instance.Id;
             pay.UserId = User.instance.Id;
         }
 
+        private void getSale(Sale sale)
+        {
+            this.sale = sale;          
+            int index = listProduct.FindIndex(x => x.Id == sale.Product);
+            cboProduct.SelectedIndex = index;            
+            txtQuantity.Text = sale.Quantity.ToString();
+            txtWeight.Text = sale.Weight.ToString();
+            txtPrice.Text = sale.Price.ToString();
+            txtTotal.Text = sale.Total.ToString();
+            txtClient.Text = sale.Client;
+            txtObservations.Text = sale.Observations;
+            panelVenta.Enabled = false;
+            panelClient.Enabled = false;            
+            getPaysForIdSale(sale.Id);
+        }
         private void getListProducts()
         {
             registerProductPresenter.setSQL(product.SqlList);
@@ -113,9 +141,13 @@ namespace Hermes.presentation.view
                     .save_sale, 0, ssMain);
                 registerSalePresenter.setSQL(sale.SqlMax);
                 Task t = Task.Factory.StartNew(new
-                    Action(registerSalePresenter.getMaxId));
+                    Action(registerSalePresenter.getDataTable));
 
                 //btnPrint.Enabled = true;
+            }else
+            {
+                controlManager.setValueTextStatusStrip(StringResources
+                    .result_nok, 0, ssMain);
             }
 
         }
@@ -125,9 +157,11 @@ namespace Hermes.presentation.view
 
             if (resultInput)
             {
+                executeGetDebts();
                 controlManager.setValueTextStatusStrip(StringResources
                     .result_ok, 0, ssMain);               
                 btnPrint.Enabled = true;
+                btnAddPay.Enabled = false;
             }
 
         }
@@ -181,6 +215,16 @@ namespace Hermes.presentation.view
                 .subjectDatatable.Subscribe(
                         t => launchListDebt(t),
                         () => Console.WriteLine("List Debt Operation."));
+
+            subscriptionGetSale = registerSalePresenter
+                .subjectSale.Subscribe(
+                        s => launchGetSale(s),
+                        () => Console.WriteLine("Get Sale Completed."));
+        }
+        private void launchGetSale(Sale sale)
+        {
+            this.Invoke(this.delegateGetSale,
+               new Object[] { sale });
         }
 
         private void launchListDebt(DataTable list)
@@ -197,36 +241,62 @@ namespace Hermes.presentation.view
 
         private void getListDebt(DataTable list, ListView lvw)
         {
-            lvw.Items.Clear();
-            foreach (DataRow dr in list.Rows)
+            
+            if (list.TableName == TABLE_PAYS)
             {
-                ListViewItem item = new ListViewItem(dr[0].ToString(),
-                    lvw.Items.Count);
-                item.SubItems.Add(dr[1].ToString());
-                lvw.Items.Add(item);
+                
+                foreach (DataRow dr in list.Rows)
+                {
+                    ListViewItem item = new ListViewItem(dr[Pay.FIELD_ID].ToString(),
+                        lvw.Items.Count);
+                    item.SubItems.Add(dr[Pay.FIELD_MOUNT].ToString());
+                    lvwPays.Items.Add(item);
+                }
+                txtSumPays.Text = Convert.ToString(getSumPays());
+                txtDifPays.Text = Convert.ToString(getDifPays());                               
             }
-               
+            else if(!string.IsNullOrEmpty(list.TableName))
+            {
+                lvw.Items.Clear();
+                foreach (DataRow dr in list.Rows)
+                {
+                    ListViewItem item = new ListViewItem(dr[0].ToString(),
+                        lvw.Items.Count);
+                    item.SubItems.Add(dr[1].ToString());
+                    lvw.Items.Add(item);
+                }
+            }            
+        }
+
+        private void executeAddPay(int id)
+        {
+            pay.IdSale = id;
+            registerPayPresenter.paramsForAddPay(pay);
+            registerPayPresenter.setSQL(pay.SqlAdd);
+            Task t = Task.Factory.StartNew(new
+                Action(registerPayPresenter.executeNonSql));
         }
 
         private void getMaxIdSale(int id, StatusStrip ssMain)
         {
             if (id != 0)
             {
-                pay.IdSale = id;
+                
                 if (getSumPays() > 0)
                 {
                     controlManager.setValueTextStatusStrip("", 0, ssMain);
-                    registerPayPresenter.paramsForAddPay(pay);
-                    registerPayPresenter.setSQL(pay.SqlAdd);
-                    Task t = Task.Factory.StartNew(new
-                        Action(registerPayPresenter.executeNonSql));
+                    executeAddPay(id);
                 }
                 else
                 {
+                    executeGetDebts();
                     controlManager.setValueTextStatusStrip(StringResources
                     .result_ok, 0, ssMain);
                     btnPrint.Enabled = true;
                 }
+                panelVenta.Enabled = false;
+                panelClient.Enabled = false;
+                btnAddPay.Enabled = false;
             }
         }
 
@@ -299,9 +369,7 @@ namespace Hermes.presentation.view
                 txtQuantity.Text = "1";
                 sale.Product = pdt.Id;
                 sale.Price = pdt.Price;
-            }
-            
-             
+            }             
         }
 
         private void txtQuantity_KeyPress(object sender, KeyPressEventArgs e)
@@ -362,16 +430,29 @@ namespace Hermes.presentation.view
             return false;
         }
 
+        private void executeAddSale()
+        {
+            
+            controlManager.setValueTextStatusStrip("", 0, status);
+            registerSalePresenter.paramsForAddSale(sale);
+            registerSalePresenter.setSQL(sale.SqlAdd);
+            Task t = Task.Factory.StartNew(new
+                Action(registerSalePresenter.executeNonSql));
+        }
+
         private void btnAddSale_Click(object sender, EventArgs e)
         {
             if (validateInput())
             {
                 btnAddSale.Enabled = false;
-                controlManager.setValueTextStatusStrip("", 0, status);
-                registerSalePresenter.paramsForAddSale(sale);
-                registerSalePresenter.setSQL(sale.SqlAdd);
-                Task t = Task.Factory.StartNew(new
-                    Action(registerSalePresenter.executeNonSql));               
+                if (Convert.ToInt16(btnAddSale.Tag) == 0)
+                {
+                    executeAddSale();
+                }
+                if (Convert.ToInt16(btnAddSale.Tag) == 1)
+                {
+                    executeAddPay(sale.Id);
+                }
             }
             else
             {
@@ -382,6 +463,13 @@ namespace Hermes.presentation.view
 
         private void clearControls()
         {
+            sale = new Sale();
+            sale.UserId = User.instance.Id;
+            pay = new Pay();
+            pay.UserId = User.instance.Id;
+            sale.Quantity = 1;
+            panelVenta.Enabled = true;
+            panelClient.Enabled = true;
             cboProduct.SelectedIndex = -1;
             txtPrice.Text = "0";
             txtQuantity.Text = "1";
@@ -393,7 +481,9 @@ namespace Hermes.presentation.view
             txtDifPays.Text = "0";
             btnPrint.Enabled = false;
             lvwPays.Items.Clear();
+            btnAddPay.Enabled = true;
             btnAddSale.Enabled = true;
+            btnAddSale.Tag = 0;
             lvwPays.Tag = 0;
         }
 
@@ -486,6 +576,15 @@ namespace Hermes.presentation.view
                 Convert.ToDecimal(txtSumPays.Text));
         }
 
+        private void getPaysForIdSale(int id)
+        {
+            registerPayPresenter.setNameTable(TABLE_PAYS);
+            registerPayPresenter.paramsForGetPaysOfId(id);
+            registerPayPresenter.setSQL(pay.SqlListPayForSale);
+            Task t = Task.Factory.StartNew(new
+                    Action(registerPayPresenter.getDataTable));
+        }
+
         private void lvwPays_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -503,7 +602,7 @@ namespace Hermes.presentation.view
         {
             registerPayPresenter.setSQL(pay.SqlList);
             Task t = Task.Factory.StartNew(new
-                Action(registerPayPresenter.getListDebt));
+                Action(registerPayPresenter.getDataTable));
         }
 
         private void lvwDebts_ItemSelectionChanged(object sender, 
@@ -511,10 +610,41 @@ namespace Hermes.presentation.view
         {
             if (e.IsSelected)
             {
+                clearControls();
+                btnAddSale.Tag = 1;
                 int id = Convert.ToInt16(e.Item.Text);
+                registerSalePresenter.paramsForGetSale(id);
+                registerSalePresenter.setSQL(sale.SqlGet);
+                Task t = Task.Factory.StartNew(new
+                    Action(registerSalePresenter.getDataTable));                
+                
                 Console.Write(id);
             }
         }
-    
+
+        private void btnShowDeb_Click(object sender, EventArgs e)
+        {
+            if(Convert.ToInt16(btnShowDeb.Tag) == 0)
+            {
+                btnShowDeb.Tag = 1;
+                btnShowDeb.Text = "<";
+                this.Width = 947;
+                this.Height = 535;
+            }else
+            {
+                btnShowDeb.Tag = 0;
+                btnShowDeb.Text = ">";
+                this.Width = 712;
+                this.Height = 535;
+            }
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            printPresenter.buildContent(sale, 
+                cboProduct.Text, txtDifPays.Text);
+            printPreview.Document = printPresenter.document;
+            printPreview.ShowDialog();
+        }
     }
 }

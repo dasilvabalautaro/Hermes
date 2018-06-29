@@ -116,11 +116,18 @@ namespace Hermes.model.data
             }
         }
 
-        public DataTable getDataTable()
+        public DataTable getDataTable(string nameTable = "")
         {
             try
             {
-                return this.repository.getDataTable();
+                if (string.IsNullOrEmpty(nameTable)){
+                    return this.repository.getDataTable();
+                }else
+                {
+                    return this.repository.getDataTable(nameTable);
+                }
+
+                
             }
             catch (ArgumentException ie)
             {

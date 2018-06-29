@@ -17,6 +17,7 @@ namespace Hermes.domain.interactor
         private string errorMessage = "";
         private string _sql;
         private DataTable _dataResult;
+        private string _nameTable;
         Dictionary<string, object> _mapParam;
         List<string> _servers;
         private Store store = new Store(RepositorySqlServer.instance);
@@ -105,6 +106,19 @@ namespace Hermes.domain.interactor
 
             }
         }
+
+        public string NameTable
+        {
+            get
+            {
+                return _nameTable;
+            }
+
+            set
+            {
+                _nameTable = value;
+            }
+        }
         #endregion
 
         #region methods
@@ -116,11 +130,19 @@ namespace Hermes.domain.interactor
             CancellationToken token = tokenSource.Token;
             try
             {
-                Task<DataTable> task = Task.Factory.StartNew(() =>
+                Task<DataTable> task = Task.Factory.StartNew(obj =>
                 {
                     try
                     {
-                        return store.getDataTable();
+                        string name = (string)obj;
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            return store.getDataTable();
+                        }else
+                        {
+                            return store.getDataTable(name);
+                        }
+                       
                     }
                     catch (ArgumentException ie)
                     {
@@ -128,7 +150,7 @@ namespace Hermes.domain.interactor
                         tokenSource.Cancel();
                     }
                     return null;
-                }, token);
+                }, NameTable, token);
                
                 if (!token.IsCancellationRequested)
                 {
@@ -148,6 +170,7 @@ namespace Hermes.domain.interactor
             finally
             {
                 errorMessage = "";
+                NameTable = "";
                 tokenSource.Dispose();
             }
         }

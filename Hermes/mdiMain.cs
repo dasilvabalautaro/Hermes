@@ -1,14 +1,9 @@
 ﻿using Hermes.locatable_resources;
+using Hermes.model.data.repository;
 using Hermes.presentation.presenter;
 using Hermes.presentation.view;
 using Hermes.tools;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,6 +21,7 @@ namespace Hermes
         public const string MENU_FILE = "archivoToolStripMenuItem";
         public const string MENU_DATABASE = "sQLServerToolStripMenuItem";
         public const string MENU_ACCESS = "ingresarToolStripMenuItem";
+        public const string MENU_MOBILE = "mobileToolStripMenuItem";
         #endregion
 
         #region variables
@@ -34,6 +30,11 @@ namespace Hermes
         private bool result;
         private delegate void MessageStatusDelegate(bool resultInput, StatusStrip ssMain);
         private MessageStatusDelegate delegateCatchMessage;
+        private HttpToolsPresenter httpToolsPresenter = new HttpToolsPresenter();
+        private delegate void MessageResultDelegate(string resultInput, StatusStrip ssMain);
+        private MessageResultDelegate delegateCatchResult;
+        IDisposable subscriptionRequest;
+        IDisposable subscriptionRequestError;
         IDisposable subscriptionAccess;
         IDisposable subscriptionAccessError;
         #endregion
@@ -51,7 +52,26 @@ namespace Hermes
             this.Left = (int)((Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2);
             controlManager.createStatusBar(this, ssMain);
             this.delegateCatchMessage = new MessageStatusDelegate(addMessageStatus);
+            this.delegateCatchResult = new MessageResultDelegate(addMessageResult);
             subscriptionReactive();
+        }
+
+        private void addMessageResult(string resultInput, StatusStrip ssMain)
+        {
+            string token = httpToolsPresenter
+                    .getValueOfKeyResponseJson(resultInput, "token");
+            if (!string.IsNullOrEmpty(token))
+            {
+                saveTokenConfigurationRegistry(token);
+            }
+        }
+
+        private void saveTokenConfigurationRegistry(string token)
+        {
+            RegistryValueDataReader registryValueDataReader = new RegistryValueDataReader();
+            registryValueDataReader.setKeyValueRegistry(RepositorySqlServer.PATH_KEY,
+                frmRegisterMobile.TOKEN_MOBILE_KEY,
+                token);
         }
 
         private void verifyDatabase()
@@ -81,7 +101,14 @@ namespace Hermes
                 .subjectError.Subscribe(
                         s => launchMessageError(s),
                         () => Console.WriteLine("Error Operation."));
-
+            subscriptionRequest = httpToolsPresenter
+                .subjectResult.Subscribe(
+                        r => launchMessageStatus(r),
+                        () => Console.WriteLine("Operation Completed."));
+            subscriptionRequestError = httpToolsPresenter
+                .subjectError.Subscribe(
+                        s => launchMessageError(s),
+                        () => Console.WriteLine("Error Operation."));
         }
 
         private void launchMessageError(string result)
@@ -97,6 +124,12 @@ namespace Hermes
                new Object[] { this.result, ssMain });
         }
 
+        private void launchMessageStatus(string result)
+        {            
+            this.Invoke(this.delegateCatchResult,
+               new Object[] {result, ssMain });
+        }
+
         private void mdiMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             subscriptionAccess.Dispose();
@@ -106,8 +139,14 @@ namespace Hermes
         private void mdiMain_Shown(object sender, EventArgs e)
         {
             verifyDatabase();
+            getToken();
         }
 
+        private void getToken()
+        {
+            Task t = Task.Factory.StartNew(new
+                    Action(httpToolsPresenter.getToken));
+        }
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.Application.Exit();
@@ -160,6 +199,22 @@ namespace Hermes
             frmConfigurationDatabase frmWork = new frmConfigurationDatabase() { MdiParent = this };
             frmWork.strNameMenu = "sQLServerToolStripMenuItem";
             sQLServerToolStripMenuItem.Enabled = false;
+            frmWork.Show();
+        }
+
+        private void videoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmBrowser frmWork = new frmBrowser() { MdiParent = this };
+            frmWork.strNameMenu = "videoToolStripMenuItem";
+            videoToolStripMenuItem.Enabled = false;
+            frmWork.Show();
+        }
+
+        private void mobileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmRegisterMobile frmWork = new frmRegisterMobile() { MdiParent = this };
+            frmWork.strNameMenu = "mobileToolStripMenuItem";
+            mobileToolStripMenuItem.Enabled = false;
             frmWork.Show();
         }
     }

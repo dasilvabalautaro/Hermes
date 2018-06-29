@@ -37,6 +37,8 @@
             this.ClientSize = new System.Drawing.Size(640, 323);
             this.Name = "frmBrowser";
             this.Text = "frmBrowser";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmBrowser_FormClosing);
+            this.Load += new System.EventHandler(this.frmBrowser_Load);
             this.ResumeLayout(false);
 
         }

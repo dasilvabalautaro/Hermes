@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +122,7 @@ namespace Hermes.tools
                 }
             }
         }
+
 
         public void enabledOptionMenu(string nameMenu, string nameMDI)
         {
@@ -279,7 +281,8 @@ namespace Hermes.tools
                     foreach (ToolStripDropDownItem smnu in mnu.DropDownItems)
                     {
                         if (smnu.Name == mdiMain.MENU_PRODUCTS ||
-                            smnu.Name == mdiMain.MENU_USERS)
+                            smnu.Name == mdiMain.MENU_USERS || 
+                            smnu.Name == mdiMain.MENU_MOBILE)
                         {
                             smnu.Enabled = false;
                             smnu.Visible = false;
@@ -344,6 +347,19 @@ namespace Hermes.tools
                 }
 
             }
+        }
+
+        public string getPrintDefault()
+        {
+            PrinterSettings print = new PrinterSettings();
+            for (int i = 0; i < PrinterSettings.InstalledPrinters.Count; i++)
+            {
+                print.PrinterName = PrinterSettings.InstalledPrinters[i].ToString();
+                if (print.IsDefaultPrinter)
+                    return PrinterSettings.InstalledPrinters[i].ToString();
+            }
+            return String.Empty;
+
         }
 
         #endregion

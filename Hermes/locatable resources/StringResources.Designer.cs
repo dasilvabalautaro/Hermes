@@ -79,6 +79,15 @@ namespace Hermes.locatable_resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internet no conecta. Verifique..
+        /// </summary>
+        internal static string network_fail {
+            get {
+                return ResourceManager.GetString("network_fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Los parámetros están vacios..
         /// </summary>
         internal static string params_empty {

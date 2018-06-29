@@ -30,6 +30,7 @@ namespace Hermes.model.data
         private string _sqlList = string.Empty;
         private string _sqlAdd = string.Empty;
         private string _sqlDel = string.Empty;
+        private string _sqlListPayForSale = string.Empty;
 
         public int Id
         {
@@ -121,6 +122,19 @@ namespace Hermes.model.data
                 _sqlDel = value;
             }
         }
+
+        public string SqlListPayForSale
+        {
+            get
+            {
+                return _sqlListPayForSale;
+            }
+
+            set
+            {
+                _sqlListPayForSale = value;
+            }
+        }
         #endregion
 
         #region methods
@@ -133,8 +147,9 @@ namespace Hermes.model.data
 
             SqlList = string.Format("SELECT T1.id, (T1.total - SUM(ISNULL(T2.mount, 0))) AS debt " +
                 "INTO #AUXFILTER FROM SALES AS T1 LEFT JOIN PAYMENTS AS T2 ON T1.id = T2.idSale " +
-                "GROUP BY T1.id, T1.total; SELECT * FROM #AUXFILTER WHERE debt > 0;");
-
+                "GROUP BY T1.id, T1.total; SELECT * FROM #AUXFILTER WHERE debt > 0; DROP TABLE #AUXFILTER;");
+            SqlListPayForSale = string.Format("SELECT * FROM {0} WHERE {1} = {2}",
+                TABLE_NAME, FIELD_ID_SALE, PARAM_ID_SALE);
         }
         #endregion
     }

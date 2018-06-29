@@ -16,6 +16,15 @@ namespace Hermes.model.data
         public const string FIELD_PASS = "password";
         public const string FIELD_FIRSTNAME = "firstName";
         public const string FIELD_LASTNAMES = "lastName";
+        public const string FIELD_NAME = "name";
+        public const string FIELD_DESCRIPTION = "description";
+        public const string FIELD_QUANTITY = "quantity";
+        public const string FIELD_LICENSE = "license";
+        public const string FIELD_USER = "user";
+        public const string FIELD_APP_ID = "app_id";
+        public const string FIELD_URL_VIDEO = "url_video";
+        public const string FIELD_TOKEN = "token";
+        public const string FIELD_ID = "id";
         public const string PARAM_USERID = "@userId";
         public const string PARAM_USERTYPEID = "@userTypeId";
         public const string PARAM_USERNAME = "@userName";

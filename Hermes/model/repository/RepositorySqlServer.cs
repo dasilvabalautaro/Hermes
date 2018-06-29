@@ -272,6 +272,10 @@ namespace Hermes.model.data.repository
             {
                 throw new ArgumentException(ie.Message);
             }
+            catch (InvalidOperationException oe)
+            {
+                throw new ArgumentException(oe.Message);
+            }
             finally
             {
                 parameters.Clear();
@@ -280,7 +284,7 @@ namespace Hermes.model.data.repository
             return true;
         }
 
-        public override DataTable getDataTable()
+        public override DataTable getDataTable(string nameTable = "table")
         {
            
             try
@@ -293,7 +297,7 @@ namespace Hermes.model.data.repository
 
                 SqlDataAdapter adapter;
                 DataTable dt = new DataTable();
-
+                dt.TableName = nameTable;
                 adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(dt);
                 if (dt.Rows.Count > 0)

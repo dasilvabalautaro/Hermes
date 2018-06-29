@@ -117,34 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="app_name" xml:space="preserve">
-    <value>Punto de Venta</value>
-  </data>
-  <data name="database_ok" xml:space="preserve">
-    <value>Base de datos conectada.</value>
-  </data>
-  <data name="network_fail" xml:space="preserve">
-    <value>Internet no conecta. Verifique.</value>
-  </data>
-  <data name="params_empty" xml:space="preserve">
-    <value>Los parámetros están vacios.</value>
-  </data>
-  <data name="result_nok" xml:space="preserve">
-    <value>Error en la operación.</value>
-  </data>
-  <data name="result_ok" xml:space="preserve">
-    <value>La operación se realizó con éxito.</value>
-  </data>
-  <data name="save_sale" xml:space="preserve">
-    <value>Venta Registrada</value>
-  </data>
-  <data name="update_invalid" xml:space="preserve">
-    <value>Actualización inválida.</value>
-  </data>
-  <data name="user_nok" xml:space="preserve">
-    <value>El usuario no existe.</value>
-  </data>
-  <data name="user_ok" xml:space="preserve">
-    <value>Usuario reconocido.</value>
-  </data>
 </root>

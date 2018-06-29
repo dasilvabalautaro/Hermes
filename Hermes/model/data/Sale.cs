@@ -246,6 +246,19 @@ namespace Hermes.model.data
                 _sqlMax = value;
             }
         }
+
+        public string SqlGet
+        {
+            get
+            {
+                return _sqlGet;
+            }
+
+            set
+            {
+                _sqlGet = value;
+            }
+        }
         #endregion
 
         #region methods
@@ -258,7 +271,8 @@ namespace Hermes.model.data
                 PARAM_PRODUCT, PARAM_QUANTITY, "GetDate()", PARAM_WEIGHT, 
                 PARAM_CLIENT, PARAM_PRICE, PARAM_USER, PARAM_OBSERVATIONS, PARAM_TOTAL);
             SqlMax = string.Format("SELECT MAX({0}) FROM {1}", FIELD_ID, TABLE_NAME);
-
+            SqlGet = string.Format("SELECT * FROM {0} WHERE {1} = {2}",
+                TABLE_NAME, FIELD_ID, PARAM_ID);
         }
 
         #endregion

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRegisterSales));
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDataCaptured = new System.Windows.Forms.TextBox();
@@ -37,7 +38,7 @@
             this.txtUser = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.panelVenta = new System.Windows.Forms.Panel();
             this.cboProduct = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -66,7 +67,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
+            this.panelClient = new System.Windows.Forms.Panel();
             this.txtObservations = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.txtClient = new System.Windows.Forms.TextBox();
@@ -82,11 +83,12 @@
             this.btnAddSale = new System.Windows.Forms.Button();
             this.btnWeight = new System.Windows.Forms.Button();
             this.btnAddWeight = new System.Windows.Forms.Button();
+            this.printPreview = new System.Windows.Forms.PrintPreviewDialog();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.panelVenta.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.panel5.SuspendLayout();
+            this.panelClient.SuspendLayout();
             this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -123,7 +125,7 @@
             this.txtDataCaptured.Size = new System.Drawing.Size(291, 105);
             this.txtDataCaptured.TabIndex = 2;
             this.txtDataCaptured.TabStop = false;
-            this.txtDataCaptured.Text = "49789";
+            this.txtDataCaptured.Text = "400";
             this.txtDataCaptured.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panel2
@@ -201,29 +203,29 @@
             this.label7.Text = "DATOS GENERALES";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel4
+            // panelVenta
             // 
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.cboProduct);
-            this.panel4.Controls.Add(this.label21);
-            this.panel4.Controls.Add(this.label12);
-            this.panel4.Controls.Add(this.txtTotal);
-            this.panel4.Controls.Add(this.label20);
-            this.panel4.Controls.Add(this.label3);
-            this.panel4.Controls.Add(this.txtWeight);
-            this.panel4.Controls.Add(this.label4);
-            this.panel4.Controls.Add(this.label2);
-            this.panel4.Controls.Add(this.txtPrice);
-            this.panel4.Controls.Add(this.txtQuantity);
-            this.panel4.Controls.Add(this.label14);
-            this.panel4.Controls.Add(this.label15);
-            this.panel4.Controls.Add(this.label16);
-            this.panel4.Controls.Add(this.label17);
-            this.panel4.Location = new System.Drawing.Point(11, 107);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(319, 203);
-            this.panel4.TabIndex = 5;
+            this.panelVenta.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelVenta.Controls.Add(this.cboProduct);
+            this.panelVenta.Controls.Add(this.label21);
+            this.panelVenta.Controls.Add(this.label12);
+            this.panelVenta.Controls.Add(this.txtTotal);
+            this.panelVenta.Controls.Add(this.label20);
+            this.panelVenta.Controls.Add(this.label3);
+            this.panelVenta.Controls.Add(this.txtWeight);
+            this.panelVenta.Controls.Add(this.label4);
+            this.panelVenta.Controls.Add(this.label2);
+            this.panelVenta.Controls.Add(this.txtPrice);
+            this.panelVenta.Controls.Add(this.txtQuantity);
+            this.panelVenta.Controls.Add(this.label14);
+            this.panelVenta.Controls.Add(this.label15);
+            this.panelVenta.Controls.Add(this.label16);
+            this.panelVenta.Controls.Add(this.label17);
+            this.panelVenta.Location = new System.Drawing.Point(11, 107);
+            this.panelVenta.Margin = new System.Windows.Forms.Padding(2);
+            this.panelVenta.Name = "panelVenta";
+            this.panelVenta.Size = new System.Drawing.Size(319, 203);
+            this.panelVenta.TabIndex = 5;
             // 
             // cboProduct
             // 
@@ -591,19 +593,19 @@
             this.label18.Text = "DATOS PAGOS";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel5
+            // panelClient
             // 
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel5.Controls.Add(this.txtObservations);
-            this.panel5.Controls.Add(this.label22);
-            this.panel5.Controls.Add(this.txtClient);
-            this.panel5.Controls.Add(this.label23);
-            this.panel5.Controls.Add(this.label24);
-            this.panel5.Location = new System.Drawing.Point(11, 314);
-            this.panel5.Margin = new System.Windows.Forms.Padding(2);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(319, 159);
-            this.panel5.TabIndex = 6;
+            this.panelClient.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelClient.Controls.Add(this.txtObservations);
+            this.panelClient.Controls.Add(this.label22);
+            this.panelClient.Controls.Add(this.txtClient);
+            this.panelClient.Controls.Add(this.label23);
+            this.panelClient.Controls.Add(this.label24);
+            this.panelClient.Location = new System.Drawing.Point(11, 314);
+            this.panelClient.Margin = new System.Windows.Forms.Padding(2);
+            this.panelClient.Name = "panelClient";
+            this.panelClient.Size = new System.Drawing.Size(319, 159);
+            this.panelClient.TabIndex = 6;
             // 
             // txtObservations
             // 
@@ -675,8 +677,10 @@
             this.btnShowDeb.Name = "btnShowDeb";
             this.btnShowDeb.Size = new System.Drawing.Size(23, 268);
             this.btnShowDeb.TabIndex = 37;
+            this.btnShowDeb.Tag = "0";
             this.btnShowDeb.Text = ">";
             this.btnShowDeb.UseVisualStyleBackColor = false;
+            this.btnShowDeb.Click += new System.EventHandler(this.btnShowDeb_Click);
             // 
             // panel6
             // 
@@ -685,7 +689,7 @@
             this.panel6.Controls.Add(this.label25);
             this.panel6.Location = new System.Drawing.Point(700, 11);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(308, 477);
+            this.panel6.Size = new System.Drawing.Size(227, 477);
             this.panel6.TabIndex = 38;
             // 
             // lvwDebts
@@ -697,10 +701,10 @@
             this.lvwDebts.Location = new System.Drawing.Point(6, 95);
             this.lvwDebts.MultiSelect = false;
             this.lvwDebts.Name = "lvwDebts";
-            this.lvwDebts.Size = new System.Drawing.Size(294, 377);
+            this.lvwDebts.Size = new System.Drawing.Size(214, 377);
             this.lvwDebts.TabIndex = 31;
             this.lvwDebts.UseCompatibleStateImageBehavior = false;
-            this.lvwDebts.View = System.Windows.Forms.View.Details;         
+            this.lvwDebts.View = System.Windows.Forms.View.Details;
             this.lvwDebts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvwDebts_ItemSelectionChanged);
             // 
             // label25
@@ -711,7 +715,7 @@
             this.label25.Location = new System.Drawing.Point(6, 0);
             this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(294, 21);
+            this.label25.Size = new System.Drawing.Size(214, 21);
             this.label25.TabIndex = 17;
             this.label25.Text = "VENTAS CON DEUDA";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -751,6 +755,7 @@
             this.btnPrint.Size = new System.Drawing.Size(73, 52);
             this.btnPrint.TabIndex = 35;
             this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // btnAddSale
             // 
@@ -761,6 +766,7 @@
             this.btnAddSale.Name = "btnAddSale";
             this.btnAddSale.Size = new System.Drawing.Size(73, 52);
             this.btnAddSale.TabIndex = 34;
+            this.btnAddSale.Tag = "0";
             this.btnAddSale.UseVisualStyleBackColor = false;
             this.btnAddSale.Click += new System.EventHandler(this.btnAddSale_Click);
             // 
@@ -787,11 +793,23 @@
             this.btnAddWeight.TabIndex = 32;
             this.btnAddWeight.UseVisualStyleBackColor = false;
             // 
+            // printPreview
+            // 
+            this.printPreview.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreview.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreview.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.printPreview.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreview.Enabled = true;
+            this.printPreview.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreview.Icon")));
+            this.printPreview.Name = "printPreview";
+            this.printPreview.ShowIcon = false;
+            this.printPreview.Visible = false;
+            // 
             // frmRegisterSales
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1012, 497);
+            this.ClientSize = new System.Drawing.Size(696, 497);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.panel6);
             this.Controls.Add(this.btnShowDeb);
@@ -800,9 +818,9 @@
             this.Controls.Add(this.btnAddSale);
             this.Controls.Add(this.btnWeight);
             this.Controls.Add(this.btnAddWeight);
-            this.Controls.Add(this.panel5);
+            this.Controls.Add(this.panelClient);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panelVenta);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "frmRegisterSales";
@@ -814,12 +832,12 @@
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.panelVenta.ResumeLayout(false);
+            this.panelVenta.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
+            this.panelClient.ResumeLayout(false);
+            this.panelClient.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -836,7 +854,7 @@
         private System.Windows.Forms.TextBox txtUser;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panelVenta;
         private System.Windows.Forms.TextBox txtPrice;
         private System.Windows.Forms.TextBox txtQuantity;
         private System.Windows.Forms.Label label14;
@@ -864,7 +882,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox txtTotal;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panelClient;
         private System.Windows.Forms.TextBox txtObservations;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox txtClient;
@@ -881,5 +899,6 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.ComboBox cboProduct;
+        private System.Windows.Forms.PrintPreviewDialog printPreview;
     }
 }
